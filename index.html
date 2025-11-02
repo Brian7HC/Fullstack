@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookHive - Discover Your Next Read</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header id="header">
+    <div class="container">
+        <!-- Top Row: BookHive left, Welcome center, Auth right -->
+        <div class="header-top">
+            <div class="logo">BookHive</div>
+            <div id="welcome-container" class="user-only hidden">
+                <span id="welcome-msg">Welcome back!</span>
+            </div>
+            <div id="auth-menu">
+                <a href="login.html" class="guest-only">Access Your Account</a>
+                <div class="user-only hidden">
+                    <a href="#logout" id="logout">Logout</a>
+                </div>
+            </div>
+        </div>
+        <!-- Bottom Row: Nav left, Search right -->
+        <div class="header-bottom">
+            <nav id="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#trending" class="nav-link">Trending</a>
+                <a href="#categories" class="nav-link">Categories</a>
+                <a href="#my-library" class="nav-link user-only hidden">My Library</a>
+                <a href="#admin" class="nav-link admin-only hidden">Admin Dashboard</a>
+            </nav>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search books...">
+                <button id="search-btn" aria-label="Search">🔍</button>
+                <ul id="search-suggestions" class="hidden"></ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <main>
+        <section id="home">
+            <div class="hero">
+                <div class="hero-bg"></div>
+                <div class="hero-content">
+                    <h1>Welcome to BookHive — Discover Your Next Read</h1>
+                    <p>Explore, save, and immerse yourself in the world of books.</p>
+                    <div class="sort-section">
+                        Sort by:
+                        <div id="header-genres"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="trending-section">
+                <h2>Trending Books</h2>
+                <div class="carousel-container">
+                    <div class="carousel" id="trending-carousel">
+                        <!-- Books loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="new-section">
+                <h2>New & Recently Added</h2>
+                <div class="carousel-container">
+                    <div class="carousel" id="new-carousel">
+                        <!-- Books loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="top-rated-section">
+                <h2>Top Rated Books</h2>
+                <div class="carousel-container">
+                    <div class="carousel" id="top-rated-carousel">
+                        <!-- Books loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="classics-section">
+                <h2>Classics</h2>
+                <div class="carousel-container">
+                    <div class="carousel" id="classics-carousel">
+                        <!-- Books loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="sci-fi-section">
+                <h2>Science Fiction & Fantasy</h2>
+                <div class="carousel-container">
+                    <div class="carousel" id="sci-fi-carousel">
+                        <!-- Books loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="children-section">
+                <h2>Children & Young Readers</h2>
+                <div class="carousel-container">
+                    <div class="carousel" id="children-carousel">
+                        <!-- Books loaded here -->
+                    </div>
+                </div>
+            </div>
+
+
+        </section>
+
+        <section id="book-grid-section" class="hidden">
+            <div class="container">
+                <div class="filters">
+                    <label for="language-filter">Language:
+                        <select id="language-filter">
+                            <option value="">All</option>
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <!-- Add more -->
+                        </select>
+                    </label>
+                    <label for="year-filter">Year:
+                        <input type="number" id="year-filter" placeholder="Publication Year">
+                    </label>
+                    <label for="author-filter">Author:
+                        <input type="text" id="author-filter" placeholder="Author Name">
+                    </label>
+                    <label for="readable-only">Readable Only:
+                        <input type="checkbox" id="readable-only">
+                    </label>
+                </div>
+                <div class="book-grid" id="book-grid">
+                    <!-- Books loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="book-detail" class="hidden">
+            <div class="book-detail-modal">
+                <button id="close-detail">×</button>
+                <div class="book-detail-content">
+                    <img id="detail-cover" alt="Book Cover">
+                    <div class="detail-meta">
+                        <h2 id="detail-title"></h2>
+                        <p id="detail-author"></p>
+                        <p id="detail-description"></p>
+                        <div class="rating-section">
+                            <div>Rating: <span id="avg-rating"></span>/5 (<span id="rating-count"></span> reviews)</div>
+                            <div class="user-actions user-only hidden">
+                                <button id="favorite-btn">❤️ Favorite</button>
+                                <div class="user-rating">
+                                    Your rating: <div class="stars" id="user-rating-stars">
+                                        <span class="star" data-value="1">★</span>
+                                        <span class="star" data-value="2">★</span>
+                                        <span class="star" data-value="3">★</span>
+                                        <span class="star" data-value="4">★</span>
+                                        <span class="star" data-value="5">★</span>
+                                    </div>
+                                    <textarea id="user-review" placeholder="Write a review..."></textarea>
+                                    <button id="submit-review-btn">Submit Review</button>
+                                </div>
+                                <div class="reviews" id="reviews"></div>
+                            </div>
+                        </div>
+                        <button id="detail-read-btn">Read Now</button>
+                        <button id="detail-add-btn">Add to Library</button>
+                    </div>
+                </div>
+                <div class="similar-books">
+                    <h3>Similar Books</h3>
+                    <div class="similar-grid" id="similar-books">
+                        <!-- Similar books -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reader" class="hidden">
+            <header class="reader-header">
+                <div class="reader-nav">
+                    <button id="reader-back" class="reader-btn back-btn">
+                        <span class="btn-icon">←</span>
+                        <span class="btn-text">Back</span>
+                    </button>
+                </div>
+                <div class="reader-info">
+                    <h2 id="reader-title" class="book-title-display"></h2>
+                    <p id="reader-author" class="book-author-display"></p>
+                </div>
+                <div class="reader-actions">
+                    <button id="reader-bookmark" class="reader-btn bookmark-btn user-only">
+                        <span class="btn-icon">📖</span>
+                        <span class="btn-text">Bookmark</span>
+                    </button>
+                </div>
+            </header>
+            <div class="reader-content">
+                <div id="reader-text" class="reader-text scrollable"></div>
+            </div>
+        </section>
+
+        <section id="my-library" class="hidden">
+            <div class="container">
+                <h2>My Library</h2>
+                <div class="book-grid" id="library-grid">
+                    <!-- Saved books -->
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-dashboard" class="hidden">
+            <div class="container">
+                <h2>Admin Dashboard</h2>
+
+                <div class="admin-section">
+                    <h3>👥 User Management</h3>
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-users">0</span>
+                            <span class="stat-label">Total Users</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="admin-users">0</span>
+                            <span class="stat-label">Admins</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="regular-users">0</span>
+                            <span class="stat-label">Regular Users</span>
+                        </div>
+                    </div>
+                    <div id="users-grid" class="users-grid">
+                        <!-- Users cards will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h3>Book Management</h3>
+                    <button id="add-book-btn">Add New Book</button>
+                    <table id="books-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="books-tbody">
+                            <!-- Books list -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Error Modal for Guests -->
+        <div id="error-modal" class="error-modal">
+            <div class="error-content">
+                <h2>📖 Login Required</h2>
+                <p>You have to be logged in to read books. Want to login?</p>
+                <button id="error-login-btn">Click Here to Login</button>
+                <button id="error-close-btn">Close</button>
+            </div>
+        </div>
+
+        <!-- No Results Modal -->
+        <div id="no-results-modal" class="no-results-modal">
+            <div class="no-results-content">
+                <h2>🤷 Oops! Book Not Found</h2>
+                <p>No book found matching your search. Try exploring other options or check your spelling.</p>
+                <button id="no-results-close-btn">OK</button>
+            </div>
+        </div>
+
+        <!-- Delete User Modal -->
+        <div id="delete-user-modal" class="delete-user-modal">
+            <div class="delete-user-content">
+                <h2>🗑️ Delete User</h2>
+                <p>Are you sure you want to delete user "<span id="delete-user-name"></span>"?</p>
+                <p class="warning-text">This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button id="confirm-delete-user-btn">Delete</button>
+                    <button id="cancel-delete-user-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+
+    <script src="js/app.js"></script>
+</body>
+</html>

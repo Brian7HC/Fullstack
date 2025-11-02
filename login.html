@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookHive - Login</title>
+
+<style>
+    /* --- GLOBAL PAGE STYLE --- */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Georgia", serif;
+        background: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f") no-repeat center/cover;
+        background-attachment: fixed;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size:20px;
+    }
+
+    /* Title */
+    .title {
+        position: absolute;
+        top: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 50px;
+        font-weight: bolder;
+        color: #fdf3e7;
+        text-shadow: 0 5px 20px rgba(0,0,0,0.9);
+    }
+
+    /* FORM CONTAINER */
+    .book-container {
+        width: 420px;
+        height: 400px;
+        padding: 45px 42px;
+        border-radius: 14px;
+
+        /* Increased opacity so fields are visible */
+        background: rgba(255, 250, 245, 0.65);
+        border: 1.8px solid rgba(255,255,255,0.6);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 8px 35px rgba(0,0,0,0.65);
+
+        position: relative;
+        overflow: hidden;
+        perspective: 1000px;
+    }
+
+    /* PAGE FLIP EFFECT */
+    .form-page {
+        position: absolute;
+        width: 100%;
+        transition: transform 0.9s ease, opacity 0.5s ease;
+        transform-origin: left center;
+    }
+
+    #signup {
+        transform: rotateY(90deg);
+        opacity: 0;
+    }
+
+    .show-signup #login {
+        transform: rotateY(-90deg);
+        opacity: 0;
+    }
+
+    .show-signup #signup {
+        transform: rotateY(0);
+        opacity: 1;
+    }
+
+    /* TEXT & INPUT FIELDS */
+    h2 {
+        text-align: center;
+        color: #3b2f2f;
+        font-size: 40px;
+        margin-bottom: 10px;
+        margin-top:5px;
+    }
+
+    input {
+        width: 70%;
+        padding: 14px;
+        margin: 13px 0;
+        border-radius: 7px;
+        font-size: 20px;
+
+        /* Fully readable now */
+        background: rgba(255,255,255,0.92);
+        border: 1.7px solid #8f796d;
+        color: #3b2f2f;
+
+        box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #6d4c41;
+        background: white;
+        box-shadow: 0 0 12px rgba(109,76,65,0.7);
+    }
+
+    ::placeholder {
+        color: #6e5a51;
+    }
+
+    button {
+        width: 30%;
+        padding: 13px;
+        margin-top: 10px;
+        font-size: 20px;
+        border: 3;
+        border-radius: 7px;
+        cursor: pointer;
+        background: #6d4c41;
+        color: white;
+        transition: 0.3s;
+        display: block;
+        margin: 14px auto 0 auto;
+    }
+
+    button:hover {
+        background: #3b2f2f;
+    }
+
+    .switch {
+        margin-top: 14px;
+        text-align: center;
+        color: #6d4c41;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.5s;
+    }
+
+    .switch:hover {
+        color: #3b2f2f;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="title">📚 Welcome to BookHive</div>
+
+<div class="book-container" id="book">
+
+    <!-- LOGIN -->
+    <form id="login" class="form-page">
+        <h2>Log In</h2>
+        <input type="text" placeholder="Email or Username" required>
+        <input type="password" placeholder="Password" required>
+        <button>Log In</button><br>
+        <div class="switch" onclick="toggleForms()">New to BookHive? Create Account →</div>
+    </form>
+
+    <!-- SIGNUP -->
+    <form id="signup" class="form-page">
+        <h2>Create Account</h2>
+        <input type="text" placeholder="Full Name" required>
+        <input type="email" placeholder="Email Address" required>
+        <input type="password" placeholder="Create Password" required>
+        <button>Sign Up</button>
+        <div class="switch" onclick="toggleForms()"> Already a member? Log In</div>
+        
+    </form>
+
+</div>
+
+<script>
+const BACKEND_URL = 'http://127.0.0.1:8081';
+
+function toggleForms() {
+    document.getElementById("book").classList.toggle("show-signup");
+}
+
+function validateEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+function validatePassword(password) {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+    return regex.test(password);
+}
+
+function showError(message) {
+    // Cool error display: create modal instead of alert
+    const errorModal = document.createElement('div');
+    errorModal.style.position = 'fixed';
+    errorModal.style.top = '0';
+    errorModal.style.left = '0';
+    errorModal.style.width = '100%';
+    errorModal.style.height = '100%';
+    errorModal.style.background = 'rgba(0,0,0,0.7)';
+    errorModal.style.display = 'flex';
+    errorModal.style.justifyContent = 'center';
+    errorModal.style.alignItems = 'center';
+    errorModal.style.zIndex = '10000';
+
+    errorModal.innerHTML = `
+        <div style="background: #f7f2e7; border-radius: 10px; padding: 40px; text-align: center; border: 2px solid #d4c4a3; max-width: 400px; box-shadow: 0 8px 35px rgba(0,0,0,0.4);">
+            <h2 style="color: #3c2a1e; margin-bottom: 15px;">⚠️ Error</h2>
+            <p style="color: #5c4642; margin-bottom: 25px;">${message}</p>
+            <button onclick="this.parentNode.parentNode.remove();" style="padding: 10px 20px; border: none; border-radius: 5px; background: #3c2a1e; color: white; cursor: pointer;">OK</button>
+        </div>
+    `;
+    document.body.appendChild(errorModal);
+}
+
+async function showSuccess(message, redirectUrl = null) {
+    const successModal = document.createElement('div');
+    successModal.style.position = 'fixed';
+    successModal.style.top = '0';
+    successModal.style.left = '0';
+    successModal.style.width = '100%';
+    successModal.style.height = '100%';
+    successModal.style.background = 'rgba(0,0,0,0.7)';
+    successModal.style.display = 'flex';
+    successModal.style.justifyContent = 'center';
+    successModal.style.alignItems = 'center';
+    successModal.style.zIndex = '10000';
+
+    successModal.innerHTML = `
+        <div style="background: #f7f2e7; border-radius: 10px; padding: 40px; text-align: center; border: 2px solid #d4c4a3; max-width: 400px; box-shadow: 0 8px 35px rgba(0,0,0,0.4);">
+            <h2 style="color: #3c2a1e; margin-bottom: 15px;">✅ Success!</h2>
+            <p style="color: #5c4642; margin-bottom: 25px;">${message}</p>
+            <button onclick="this.parentNode.parentNode.remove(); ${redirectUrl ? `window.location.href='${redirectUrl}'` : ''}" style="padding: 10px 20px; border: none; border-radius: 5px; background: #3c2a1e; color: white; cursor: pointer;">Continue</button>
+        </div>
+    `;
+    document.body.appendChild(successModal);
+}
+
+// Login form submit
+document.getElementById('login').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const loginBtn = this.querySelector('button');
+    const originalText = loginBtn.textContent;
+
+    const email = this.querySelector('input[type="text"]').value;
+    const password = this.querySelector('input[type="password"]').value;
+
+    // Basic client-side validation
+    if (!email || !password) {
+        showError('Please fill in all fields.');
+        return;
+    }
+
+    // Show loading
+    loginBtn.textContent = 'Logging in...';
+    loginBtn.disabled = true;
+
+    try {
+        const response = await fetch(`${BACKEND_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Success - store token and user info
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userInfo', JSON.stringify(data.user));
+            showSuccess(`Login successful! Welcome back, ${data.user.username}!`, 'index.html');
+        } else {
+            // Error from backend
+            showError(data.error || 'Login failed');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showError('Network error. Please try again.');
+    } finally {
+        // Reset button
+        loginBtn.textContent = originalText;
+        loginBtn.disabled = false;
+    }
+});
+
+// Signup form submit
+document.getElementById('signup').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const signupBtn = this.querySelector('button');
+    const originalText = signupBtn.textContent;
+
+    const name = this.querySelector('input[type="text"]').value;
+    const email = this.querySelector('input[type="email"]').value;
+    const password = this.querySelector('input[type="password"]').value;
+
+    // Basic client-side validation
+    if (!name || !email || !password) {
+        showError('Please fill in all fields.');
+        return;
+    }
+
+    // Show loading
+    signupBtn.textContent = 'Creating Account...';
+    signupBtn.disabled = true;
+
+    try {
+        const response = await fetch(`${BACKEND_URL}/auth/signup`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: name, // API expects 'username'
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Success - store token and switch to login
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userInfo', JSON.stringify(data.user));
+            showSuccess('Account created successfully! You can now login.', null);
+            toggleForms(); // Switch to login form
+        } else {
+            // Error from backend
+            showError(data.error || 'Signup failed');
+        }
+    } catch (error) {
+        console.error('Signup error:', error);
+        showError('Network error. Please try again.');
+    } finally {
+        // Reset button
+        signupBtn.textContent = originalText;
+        signupBtn.disabled = false;
+    }
+});
+
+</script>
+
+</body>
+</html>
